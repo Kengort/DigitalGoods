@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Каталог - DigitalGoods{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/catalog.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="catalog-page">
+    <h1 class="catalog-title">Каталог товаров</h1>
+    
+    <div class="catalog-container">
+        <!-- Левая колонка с категориями -->
+        <div class="categories-sidebar">
+            <h2>Категории</h2>
+            <ul class="categories-list">
+                {% for category in categories %}
+                <li class="{% if category == selected_category %}active{% endif %}">
+                    <a href="{{ url_for('catalog', category=category) }}">{{ category }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Правая колонка с товарами -->
+        <div class="catalog-content">
+            <!-- Верхняя панель с поиском и сортировкой -->
+            <div class="catalog-header">
+                <div class="search-bar">
+                    <input type="text" placeholder="Поиск товаров...">
+                </div>
+                <div class="sort-dropdown">
+                    <select>
+                        <option selected disabled>Сортировка</option>
+                        <option>По цене (возр.)</option>
+                        <option>По цене (убыв.)</option>
+                        <option>По названию</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Сетка товаров -->
+            <div class="products-grid">
+                {% for product in products %}
+                <div class="product-card">
+                    <h3>{{ product.name }}</h3>
+                    <p class="price">{{ product.price }}</p>
+                    <button class="add-to-cart">В корзину</button>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Пагинация -->
+            <div class="pagination">
+                {% if current_page > 1 %}
+                    <a href="{{ url_for('catalog', page=current_page-1) }}" class="pagination-btn">Назад</a>
+                {% endif %}
+                
+                {% for page in range(1, total_pages + 1) %}
+                    <a href="{{ url_for('catalog', page=page) }}" 
+                       class="pagination-btn {% if page == current_page %}active{% endif %}">
+                        {{ page }}
+                    </a>
+                {% endfor %}
+                
+                {% if current_page < total_pages %}
+                    <a href="{{ url_for('catalog', page=current_page+1) }}" class="pagination-btn">Вперед</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

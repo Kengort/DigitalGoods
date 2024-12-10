@@ -1,0 +1,97 @@
+.about-page {
+    max-width: 1200px;
+    margin: 80px auto 40px;
+    padding: 20px;
+    color: #fff;
+}
+
+.about-title {
+    font-size: 2.5em;
+    text-align: center;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.about-subtitle {
+    text-align: center;
+    color: #ccc;
+    margin-bottom: 50px;
+}
+
+.about-section {
+    background: var(--surface-color);
+    padding: 30px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    border: 1px solid rgba(99, 102, 241, 0.1);
+}
+
+.about-section h2 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
+
+.about-section p {
+    line-height: 1.6;
+    color: #fff;
+}
+
+.about-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.about-section ul li {
+    padding: 10px 0;
+    position: relative;
+    padding-left: 25px;
+}
+
+.about-section ul li:before {
+    content: "•";
+    color: #b388ff;
+    position: absolute;
+    left: 0;
+    font-size: 1.2em;
+}
+
+.newsletter-section {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.newsletter-form {
+    display: flex;
+    max-width: 500px;
+    margin: 20px auto;
+    gap: 10px;
+}
+
+.email-input {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    background: var(--card-background);
+    color: #fff;
+    border: 1px solid rgba(99, 102, 241, 0.1);
+}
+
+.email-input::placeholder {
+    color: #ccc;
+}
+
+.subscribe-button {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.subscribe-button:hover {
+    background: #9c77e0;
+}

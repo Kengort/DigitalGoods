@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="cart-container">
+    <h1>Корзина</h1>
+    
+    <div class="cart-content">
+        <div class="cart-items" id="cartItemsList">
+            <!-- Items will be loaded dynamically via JavaScript -->
+        </div>
+
+        <div class="cart-summary">
+            <h2>Итого</h2>
+            <div class="summary-details">
+                <span>Сумма заказа:</span>
+                <span class="total-price">0 ₽</span>
+            </div>
+            <button class="checkout-btn" onclick="openCheckoutModal()">Оформить заказ</button>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно оформления заказа -->
+<div id="checkoutModal" class="modal">
+    <div class="modal-content">
+        <h2>Оформление заказа</h2>
+        <form id="checkoutForm">
+            <div class="form-group">
+                <label for="name">Имя</label>
+                <input type="text" id="name" placeholder="Ваше имя" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="Ваш email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="payment">Способ оплаты</label>
+                <select id="payment" required>
+                    <option value="PayPal">PayPal</option>
+                    <option value="Card">Банковская карта</option>
+                    <option value="Qiwi">QIWI</option>
+                </select>
+            </div>
+            
+            <div class="modal-buttons">
+                <button type="submit" class="confirm-btn">Подтвердите заказ</button>
+                <button type="button" class="cancel-btn" onclick="closeCheckoutModal()">Отмена</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<template id="cartItemTemplate">
+    <div class="cart-item">
+        <div class="item-info">
+            <span class="item-name"></span>
+            <span class="price"></span>
+        </div>
+        <div class="item-controls">
+            <button class="quantity-btn minus">-</button>
+            <span class="quantity">1</span>
+            <button class="quantity-btn plus">+</button>
+            <button class="remove-btn">
+                <i class="fas fa-trash-alt"></i>
+            </button>
+        </div>
+    </div>
+</template>
+
+<script>
+    // Добавляем функции для работы с модальным окном
+    function openCheckoutModal() {
+        document.getElementById('checkoutModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeCheckoutModal() {
+        document.getElementById('checkoutModal').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const cartItemsList = document.getElementById('cartItemsList');
+        const template = document.getElementById('cartItemTemplate');
+        let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+
+        function renderCart() {
+            cartItemsList.innerHTML = '';
+            
+            if (cartItems.length === 0) {
+                cartItemsList.innerHTML = '<p class="empty-cart">Ваша корзина пуста</p>';
+                const totalPriceElement = document.querySelector('.total-price');
+                if (totalPriceElement) {
+                    totalPriceElement.textContent = '0 ₽';
+                }
+                return;
+            }
+
+            cartItems.forEach((item, index) => {
+                const clone = template.content.cloneNode(true);
+                
+                clone.querySelector('.item-name').textContent = item.name;
+                clone.querySelector('.price').textContent = item.price;
+                clone.querySelector('.quantity').textContent = item.quantity;
+
+                const cartItem = clone.querySelector('.cart-item');
+                cartItem.dataset.index = index;
+
+                cartItemsList.appendChild(clone);
+            });
+
+            updateTotalPrice();
+        }
+
+        function updateTotalPrice() {
+            const totalPriceElement = document.querySelector('.total-price');
+            if (!totalPriceElement) return;
+
+            const total = cartItems.reduce((sum, item) => {
+                const price = parseInt(item.price.replace(/[^\d]/g, ''));
+                return sum + price * (item.quantity || 1);
+            }, 0);
+
+            totalPriceElement.textContent = total + ' ₽';
+        }
+
+        renderCart();
+
+        // Event delegation for cart controls
+        cartItemsList.addEventListener('click', function(e) {
+            const cartItem = e.target.closest('.cart-item');
+            if (!cartItem) return;
+
+            const index = parseInt(cartItem.dataset.index);
+            
+            if (e.target.classList.contains('plus')) {
+                cartItems[index].quantity++;
+            } else if (e.target.classList.contains('minus') && cartItems[index].quantity > 1) {
+                cartItems[index].quantity--;
+            } else if (e.target.closest('.remove-btn')) {
+                cartItems.splice(index, 1);
+            }
+
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+            renderCart();
+            updateCartCounter(); // Обновляем счетчик в шапке
+        });
+    });
+</script>
+{% endblock %}

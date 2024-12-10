@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+    <h1>Откройте мир<br> цифровых<br> возможностей</h1>
+    <p>Премиум ключи, VPN-сервисы и программное обеспечение — все в одном месте</p>
+    <a href="/catalog" class="cta-button">Начать покупки</a>
+</section>
+
+<section class="popular-products">
+    <h2>Популярные товары</h2>
+    <div class="products-grid">
+        {% for product in products %}
+        <div class="product-card">
+            <h3>{{ product.name }}</h3>
+            <p class="price">{{ product.price }}</p>
+            <button class="add-to-cart">В корзину</button>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="reviews">
+    <h2>Отзывы клиентов</h2>
+    <div class="reviews-grid">
+        {% for review in reviews %}
+        <div class="review-card">
+            <div class="review-header">
+                <div class="avatar">{{ review.name[0] }}</div>
+                <div class="reviewer-info">
+                    <h4>{{ review.name }}</h4>
+                    <div class="stars">
+                        {% for _ in range(review.rating) %}
+                        ⭐
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <p>{{ review.text }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="newsletter">
+    <h2>Подпишитесь на наши новости</h2>
+    <p>Будьте в курсе наших последних предложений и эксклюзивных скидок</p>
+    <form class="newsletter-form">
+        <input type="email" placeholder="Ваш email" required>
+        <button type="submit">Подписаться</button>
+    </form>
+</section>
+{% endblock %}
